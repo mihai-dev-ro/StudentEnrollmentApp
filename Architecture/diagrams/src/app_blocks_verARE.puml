@@ -1,0 +1,101 @@
+@startuml
+' !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
+!include lib/C4_Containercon.puml
+
+title New GL application blocks
+
+LAYOUT_LEFT_RIGHT
+LAYOUT_AS_SKETCH()
+
+skinparam linetype ortho
+
+' app blocks (containers)
+Container_Boundary(sources, "sources"){
+    Container(sor, "System of Records", "technology", "e.g. Core Banking")
+    Container(sor_non_core, "System of Records", "technology", "e.g. Non Core Banking")
+    Container(market_data_services, "Market Data Services", "technology", "e.g. FX Rates Source")
+    Container(grdm, "Global Referencedata Services", "technology", "e.g. Non Finance")
+}
+
+System_Boundary(kafka_cluster, "Kafka Cluster - Distributed Message Queue \nPrincipal, high throughput, high availability, \nexactly-once delivery, fault-tolerant, \nmessage queue for the bank"){
+    ContainerMQ(mq1, "Partition 1", "Topics 1, 2, 3")
+    ContainerMQ(mq2, "Partition 2", "Topics 4, 5, 6")
+    ContainerMQ(mq3, "Partition 3", "Topics 7, 8")  
+    ContainerMQ(mq4, "Partition 4", "Topics a, b, c")
+    ContainerMQ(mq5, "Partition 5", "Topics d")  
+}
+
+'ContainerMQ(event_bus, "Event Bus","Kafka - Distributed Message Queue", "Principal, high throughput, high availability, exactly-once delivery, fault-tolerant, message queue for the bank")
+
+System_Boundary(data_lake, "RO Data Lake"){
+    System_Boundary(sdp_cluster, "Stream Data Processing Cluster - Distributed Event Processor \nHigh throughput, high available event processing system"){
+        Container(sdp1, "ETL for Topics 1, 2, 3", "Flink / Spark")
+        Container(sdp2, "ETL for Topics 4, 5, 6", "Flink / Spark")
+        Container(sdp3, "ETL for Topics 7, 8", "Flink / Spark")    
+    }
+
+    System_Boundary(oh_cluster, "Operational History - Event Store Cluster \nDistributed Database for storing all operational events"){
+        ContainerCassandraDb(dbc1, "Event Store \nNode #1")
+        ContainerCassandraDb(dbc2, "Event Store \nNode #2")
+        ContainerCassandraDb(dbc3, "Event Store \nNode #3")
+    }
+
+    Container(dwh_landing, "Information Ingestion", "File System", "Collection Point for files uploaded into Data Warehouse")
+    ContainerDb(dwh_staging, "Operational History", "Oracle Db? ver?", "Load 1:1 from files")
+    ContainerDb(dwh_iw, "Information Warehouse", "Oracle Db? ver?", "Integrated, Cleansed, Time-Variant Data")
+    FinanceContainerDb(dwh_app_layer, "Application Layer", "Oracle Db? Ver?", "Scheduled-optimized and subject-specific Data Mart")
+}
+
+FinanceContainer(are_events, "Event-based Accounting Rules Engine", "technology")
+
+Container_Boundary(finance, "Finance Domain"){
+    FinanceContainer(dep, "DEP", "Oracle Solaris ZFS File Server, ODI", "Data Exchange Portal. \nopps as: validation, decompression, decryption")
+    FinanceContainer(are, "Accounting Rules Engine", "To Be Clarified", "Additional journal creation \n(adjustments)")
+    FinanceContainer(gl, "PeopleSoft GL", "Oracle", "General Ledger")
+}
+
+Container_Boundary(finance_reporting, "Finance Reporting & Analytics"){
+    Container(fin_obiee, "Oracle OBIEE", "Finance Analytics. Integrated BI System")
+    Container(gfrs, "GFRS", "Oracle Db Mainframe (Exadata)", "Global Financial Reporting System")
+    Container(bind,"BIND", "Oracle Db, WebLogic Server, OBIEE", "Local Regulatory Reporting")
+}
+
+Rel(dwh_landing, dwh_staging, "Load 1:1 from files into tables", "IBM InfoSphere Datastage")
+Rel(dwh_staging, dwh_iw, "Apply mapping rules & data consolidation transformations", "IBM Datastage")
+Rel(dwh_iw, dwh_app_layer, "Perform aggregations & Format to PS GL", "IBM Datastage")
+
+Rel(sor, mq1, "Send \n Inventory \nD/C journals", "SFTP")
+Rel(sor_non_core, mq2, "Send \n Inventory \nD/C journals", "SFTP")
+Rel(market_data_services, mq3, "Send Fx Rates", "SFTP")
+Rel(grdm, mq3, "Send Reference data", "XFB")
+
+Rel_Back(mq1, sdp1, "Consume events from subscribed topics")
+Rel_Back(mq2, sdp2, "Consume events from subscribed topics")
+Rel_Back(mq3, sdp3, "Consume events from subscribed topics")
+Rel(sdp1, mq4, "Submit Relevant Events")
+Rel(sdp2, mq4, "Submit Relevant Events")
+Rel(sdp3, mq5, "Submit Relevant Events")
+
+Rel_Back(mq1, are_events, "Consume Business events")
+Rel_Back(mq2, are_events, "Consume Business events")
+Rel_Back(mq3, are_events, "Consume Business events")
+
+
+Rel_Back(mq1, dbc1, "Retain all events in the order they have been submitted")
+Rel_Back(mq2, dbc2, "Retain all events in the order they have been submitted")
+Rel_Back(mq3, dbc3, "Retain all events in the order they have been submitted")
+
+
+Rel(dwh_app_layer, dep, "Transfer the aggregated journals", "XFB")
+Rel_Back(dep, gl, "Retrieve the aggregated journals", "NFS")
+
+Rel_Back(dep, gl, "Send the daily GL balances", "NFS")
+Rel(dep, dwh_landing, "Send the Daily GL Balances", "XFB")
+Rel_Back(dep, are, "Retrieve financial facts for adjustments", "NFS")
+Rel(are, gl, "Send adjustments journals", "XFB")
+
+Rel(gl, bind, "Send GL Daily Balances", "XFB")
+Rel(gl, gfrs, "Send GL Daily Balances", "XFB")
+Rel(gl, fin_obiee, "TO BE COMPLETED?", "???")
+
+@enduml

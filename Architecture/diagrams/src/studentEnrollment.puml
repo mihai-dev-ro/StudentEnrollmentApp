@@ -1,0 +1,23 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+title Students Enrollment System
+
+LAYOUT_LEFT_RIGHT
+LAYOUT_AS_SKETCH()
+
+Person_Ext(student, "Future Student", "Person that is interested in pursuing an university degree")
+
+System_Boundary(student_enrollment_app, "Student Enrollment"){
+    System(mobile_app, "University Enrollment App", "The application available on Mobile Devices that allows a user to navigate among various universities and enroll into the selected ones")
+    System(backend_service, "Backend API", "Internet accessible Web Service exposing endpoints to manage the state of the submitted applications for each user")
+    SystemDb(database, "Database", "Persist the state of submitted applications")    
+}
+
+System_Ext(notification_service, "Emailing Service used to send email notifications to registered users")
+
+Rel_Left(student, mobile_app, "View Universities, Apply to universities, Monitor acceptance status")
+Rel(mobile_app, backend_service, "HTTPS", "Sync information regarding to user")
+Rel_Left(backend_service, database, "JDBC", "Persist state of app")
+Rel_Down(backend_service, notification_service, "SMTP", "Send e-mail using")
+@enduml

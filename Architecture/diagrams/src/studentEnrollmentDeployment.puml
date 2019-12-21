@@ -1,0 +1,43 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4.puml
+
+!define FONT_COLOR #FFFFFF
+!define NODE_BACKGROUND_COLOR #438DD5
+
+LAYOUT_LEFT_RIGHT
+
+title Student Enrollment Deployment
+
+skinparam Linetype ortho
+
+skinparam node {
+    FontColor FONT_COLOR
+    BackgroundColor NODE_BACKGROUND_COLOR
+    Padding 100
+}
+
+skinparam component {
+    FontColor #000000
+    BackgroundColor #D5CECB
+    BorderColor #777777
+}
+
+node "Mobile Device \nAndroid OS Phone / Tablet\n" as nodeMobile {
+    component "NextLevelStudy \nApp" as nextLevelStudyApp 
+}
+cloud "AWS \n\n" {
+    node "Web Server with \nfollowing components \npre-installed:\nJVM\n" <<linux>>as nodeWebServer {
+        component "Backend Web Service \nRest API" as backendWebService
+        database PostgreSQL as database
+    }   
+}
+
+node "External Emailing Service" <<mailgun>> as nodeEmailingService {
+    component "SMTP Server" as smtpServer
+}
+
+nodeMobile -- nodeWebServer : TCP/IP [HTTPS]
+nodeWebServer -- nodeEmailingService : TCP/IP
+nextLevelStudyApp --> backendWebService
+
+@enduml

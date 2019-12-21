@@ -1,0 +1,56 @@
+@startuml
+' !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
+!include lib/C4_Container.puml
+
+title New GL application blocks
+
+LAYOUT_LEFT_RIGHT
+LAYOUT_AS_SKETCH()
+
+' app blocks (containers)
+Container_Boundary(sources, "sources"){
+    Container(profile, "Profile7", "TODO: ?", "Core Banking for Retail")
+    Container(grdm, "GRDM", "technology", "Global Reference Data Management")
+    Container(fx_engine, "FX Engine", "technology", "NBR FX Rates Source")
+}
+
+System_Boundary(data_lake, "RO Data Lake"){
+    Container(dwh_landing, "Information Ingestion", "File System", "Collection Point for files uploaded into Data Warehouse")
+    ContainerDb(dwh_staging, "Operational History", "Oracle Db? ver?", "Load 1:1 from files")
+    ContainerDb(dwh_iw, "Information Warehouse", "Oracle Db? ver?", "Integrated, Cleansed, Time-Variant Data")
+    ContainerDb(dwh_app_layer, "Application Layer", "Oracle Db? Ver?", "Scheduled-optimized and subject-specific Data Mart")
+}
+
+Container_Boundary(finance, "Finance Domain"){
+    Container(dep, "DEP", "Oracle Solaris ZFS File Server, ODI", "Data Exchange Portal. \nopps as: validation, decompression, decryption") 
+    Container(are, "Accounting Rules Engine", "To Be Clarified", "Additional journal creation \n(adjustments)")
+    Container(gl, "PeopleSoft GL", "Oracle", "General Ledger")
+}
+
+Container_Boundary(finance_reporting, "Finance Reporting & Analytics"){
+    Container(fin_obiee, "Oracle OBIEE", "Finance Analytics. Integrated BI System")
+    Container(gfrs, "GFRS", "Oracle Db Mainframe (Exadata)", "Global Financial Reporting System")
+    Container(bind,"BIND", "Oracle Db, WebLogic Server, OBIEE", "Local Regulatory Reporting")
+}
+
+Rel(dwh_landing, dwh_staging, "Load 1:1 from files into tables", "IBM InfoSphere Datastage")
+Rel(dwh_staging, dwh_iw, "Apply mapping rules & data consolidation transformations", "IBM Datastage")
+Rel(dwh_iw, dwh_app_layer, "Perform aggregations & Format to PS GL", "IBM Datastage")
+
+Rel(profile, dwh_landing, "Send \n Inventory \nD/C journals", "SFTP")
+Rel(grdm, dwh_landing, "Send mapping definitions", "SFTP")
+Rel(fx_engine, dwh_landing, "Send NBR Fx Rates", "SFTP")
+
+Rel(dwh_app_layer, dep, "Transfer the aggregated journals", "XFB")
+Rel_Back(dep, gl, "Retrieve the aggregated journals", "NFS")
+
+Rel_Back(dep, gl, "Send the daily GL balances", "NFS")
+Rel(dep, dwh_landing, "Send the Daily GL Balances", "XFB")
+Rel_Back(dep, are, "Retrieve financial facts for adjustments", "NFS")
+Rel(are, gl, "Send adjustments journals", "XFB")
+
+Rel(gl, bind, "Send GL Daily Balances", "XFB")
+Rel(gl, gfrs, "Send GL Daily Balances", "XFB")
+Rel(gl, fin_obiee, "TO BE COMPLETED?", "???")
+
+@enduml

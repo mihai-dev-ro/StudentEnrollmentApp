@@ -1,0 +1,14 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+title Student Enrollment System
+
+Container(mobile_app, "NextLevelStudy", "Java, Android", "Android-based Mobile App accessible by end-users")
+Container(backend_service, "Backend Web Service", "Scala, Play, Slick", "Web Service that exposes API for university listing, submission status, etc")
+ContainerDb(database, "Database", "PostgreSQL", "Persist the user's session")
+Container(email_service, "Emailing Service", "Mailgun", "3rd party email service that is used for notification needs")
+
+Rel(mobile_app, backend_service, "send requests", "HTTPS")
+Rel(backend_service, database, "Update state", "JDBC")
+Rel_Right(backend_service, email_service, "Send email notification using", "SMTP")
+@enduml

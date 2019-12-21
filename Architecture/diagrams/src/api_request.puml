@@ -1,0 +1,36 @@
+@startuml
+
+title Handling API request with authentication
+
+actor MobileApp #Blue
+
+box "Router" #LightBlue 
+    participant Router
+    participant ActionBuilder
+    participant BodyParser
+end box
+
+box "Model" #LightGrey
+    participant Student
+    participant StudentMetaModel
+end box
+
+box "Service Layer" #LightCyan
+    participant "Student \nCreateUpdate \nService" as StudentCreateUpdateService
+    participant "Student \nSubmission \nService" as StudentSubmitService
+end box
+
+box "Database Access Layer" #LightYellow
+    participant StudentRepo
+end box
+
+autonumber
+
+MobileApp -> Router: POST /students
+Router -> ActionBuilder: Call RegisterStudent
+ActionBuilder -> BodyParser: Parse Request Body
+BodyParser -> Student: Instantiate Student model
+ActionBuilder -> StudentCreateUpdateService: Saves into Db
+StudentCreateUpdateService -> StudentRepo: Call insert into Db
+
+@enduml
