@@ -4,7 +4,7 @@ import authentication.api.SecurityUserCreator
 import common.exceptions.ValidationException
 import common.repositories.DateTimeProvider
 import common.utils.DBIOUtils
-import authentication.models.{NewSecurityUser, SecurityUserId}
+import authentication.models.{NewSecurityUser}
 import student.models.{Student, StudentId, StudentRegistration}
 import student.repositories.StudentRepo
 import play.api.Configuration

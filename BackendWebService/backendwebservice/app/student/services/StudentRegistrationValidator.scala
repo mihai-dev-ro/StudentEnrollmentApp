@@ -8,8 +8,7 @@ import slick.dbio.DBIO
 import scala.concurrent.ExecutionContext
 
 private[student] class StudentRegistrationValidator(passwordValidator: PasswordValidator,
-                                               emailValidator: EmailValidator,
-                                               actionRunner: DbActionRunner)(
+                                               emailValidator: EmailValidator)(
                                                implicit private val ex: ExecutionContext) {
 
   def validate(studentRegistration: StudentRegistration): DBIO[Seq[PropertyViolation]] = {
