@@ -4,7 +4,7 @@ trait Universities {
   import scalaz.Reader
 
   def getAll = Reader((universityRepo: UniversityRepo) =>
-    universityRepo.getAll
+    universityRepo.getAll)
 
   def getById(id: Int) = Reader((universityRepo: UniversityRepo) =>
     universityRepo.getById(id))

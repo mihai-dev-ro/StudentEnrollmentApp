@@ -16,7 +16,6 @@ case class SecurityUser(id: SecurityUserId,
   override def toString: String = {
     s"SecurityUser($id, $email, password hash concealed, $createdAt, $updatedAt)"
   }
-
 }
 
 case class PasswordHash(value: String) extends AnyVal

@@ -1,4 +1,4 @@
-package student.controllers
+package student.controllers.authentication_middleware
 
 import play.api.mvc.{ActionBuilder, AnyContent}
 

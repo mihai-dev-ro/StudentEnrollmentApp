@@ -27,6 +27,6 @@ private[student] class EmailValidator(securityUserProvider: SecurityUserProvider
   }
 
   def isNotEmailValid(email: Email) = {
-    !emailValidator.isValid(email.address)
+    !emailValidator.isValid(email.value)
   }
 }

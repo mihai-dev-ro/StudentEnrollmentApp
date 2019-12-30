@@ -7,7 +7,7 @@ import play.api.libs.json.{Format, Json}
 private[student] case class StudentRegistration(password: PlainTextPassword,
                                                 email: Email)
 
-object UserRegistration {
+object StudentRegistration {
   implicit val userRegistrationFormat: Format[StudentRegistration] =
     Json.format[StudentRegistration]
 }

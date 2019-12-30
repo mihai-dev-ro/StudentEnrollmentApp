@@ -12,13 +12,12 @@ object StudentId {
   implicit val StudentIdFormat: Format[StudentId] = new Format[StudentId] {
     override def writes(o: StudentId): JsValue = Writes.IntWrites.writes(o.value)
 
-    override def reads(json: JsValue): JsResult[StudentId] = Reads.IntReads.reads(json).map(StudentId(_))
+    override def reads(json: JsValue): JsResult[StudentId] =
+      Reads.IntReads.reads(json).map(StudentId(_))
   }
 
-  implicit val studentIdDbMapping: BaseColumnType[StudentId] = MappedColumnType.base[StudentId, Int] (
-    vo => vo.value,
-    id => StudentId(id)
-  )
+  implicit val studentIdDbMapping: BaseColumnType[StudentId] =
+    MappedColumnType.base[StudentId, Int] (vo => vo.value, id => StudentId(id))
 
 }
 

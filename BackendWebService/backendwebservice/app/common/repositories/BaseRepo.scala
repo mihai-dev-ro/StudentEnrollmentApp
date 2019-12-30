@@ -1,6 +1,8 @@
 package common.repositories
 
+import common.exceptions.MissingModelException
 import common.models._
+import common.utils.DBIOUtils
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api.{DBIO => _, MappedTo => _, Rep => _, TableQuery => _, _}
 import slick.lifted._
@@ -105,7 +107,7 @@ trait BaseRepo[ModelId <: BaseId[Long],
 
   def findById(modelId: ModelId): DBIO[Model] = {
     findByIdOption(modelId)
-      .flatMap(maybeModel => DbioUtils.optionToDbio(maybeModel, new MissingModelException(s"model id: $modelId")))
+      .flatMap(maybeModel => DBIOUtils.optionToDBIO(maybeModel, new MissingModelException(s"model id: $modelId")))
   }
 
   def delete(modelId: ModelId): DBIO[Int] = {

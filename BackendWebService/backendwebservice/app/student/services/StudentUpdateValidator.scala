@@ -15,7 +15,7 @@ private[student] class StudentUpdateValidator(emailValidator: EmailValidator,
   def validate(student: Student, studentForUpdating: StudentForUpdating) = {
     for {
       emailViolations <- validateEmail(student, studentForUpdating)
-      passwordViolations <- validatePassword(student, studentForUpdating)
+      passwordViolations =  validatePassword(student, studentForUpdating)
     } yield emailViolations ++ passwordViolations
   }
 

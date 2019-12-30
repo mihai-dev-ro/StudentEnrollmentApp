@@ -8,10 +8,15 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.13.1"
 
 libraryDependencies ++= Seq(
-  guice,
+  filters,
+  evolutions,
+  ws,
+  ehcache,
+  cacheApi,
   "com.typesafe.play" %% "play-json" % "2.7.4",
   "com.typesafe.play" %% "play-slick" % "4.0.2",
   "com.typesafe.play" %% "play-slick-evolutions" % "4.0.2",
+  "org.julienrf" %% "play-json-derived-codecs" % "6.0.0",
   "org.mindrot" % "jbcrypt" % "0.4",
   "commons-validator" % "commons-validator" % "1.6",
   "org.apache.commons" % "commons-lang3" % "3.9",

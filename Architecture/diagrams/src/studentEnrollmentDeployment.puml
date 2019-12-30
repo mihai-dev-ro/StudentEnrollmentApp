@@ -13,7 +13,6 @@ skinparam Linetype ortho
 skinparam node {
     FontColor FONT_COLOR
     BackgroundColor NODE_BACKGROUND_COLOR
-    Padding 100
 }
 
 skinparam component {
@@ -23,21 +22,32 @@ skinparam component {
 }
 
 node "Mobile Device \nAndroid OS Phone / Tablet\n" as nodeMobile {
-    component "NextLevelStudy \nApp" as nextLevelStudyApp 
+    component "Student Enrollment \nApp" as nextLevelStudyApp 
 }
-cloud "AWS \n\n" {
+cloud "AWS \n\n" {     
+   
     node "Web Server with \nfollowing components \npre-installed:\nJVM\n" <<linux>>as nodeWebServer {
         component "Backend Web Service \nRest API" as backendWebService
-        database PostgreSQL as database
-    }   
+    }
+
+    database "Primary Instance\nMySQL DB" as databasePrimary
+    database "Standby Replica \nMySQL DB" as databaseReplica
 }
 
-node "External Emailing Service" <<mailgun>> as nodeEmailingService {
-    component "SMTP Server" as smtpServer
+cloud "SaaS Mailgun" {
+    node "External Emailing Service" <<mailgun>> as nodeEmailingService {
+        component "SMTP Server" as smtpServer
+    }
 }
 
-nodeMobile -- nodeWebServer : TCP/IP [HTTPS]
-nodeWebServer -- nodeEmailingService : TCP/IP
-nextLevelStudyApp --> backendWebService
+nextLevelStudyApp --> backendWebService: Send API Calls \n HTTPS 
+backendWebService -right-> databasePrimary
+databasePrimary <-down-> databaseReplica: write data / ack
+
+
+nodeWebServer -right- nodeEmailingService : TCP/IP
+
+
+
 
 @enduml

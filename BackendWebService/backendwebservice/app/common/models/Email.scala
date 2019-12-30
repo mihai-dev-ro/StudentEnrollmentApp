@@ -1,8 +1,9 @@
 package common.models
 
 import play.api.libs.json._
+import slick.jdbc.PostgresProfile.api.{DBIO => _, MappedTo => _, Rep => _, TableQuery => _, _}
 
-case class Email(address: String) extends AnyVal
+case class Email(value: String) extends AnyVal
 
 object Email {
 
@@ -11,6 +12,11 @@ object Email {
       Reads.StringReads.reads(json).map(Email(_))
 
     override def writes(o: Email): JsValue =
-      Writes.StringWrites.writes(o.address)
+      Writes.StringWrites.writes(o.value)
   }
+
+  implicit val emailDbMapping: BaseColumnType[Email] = MappedColumnType.base[Email, String](
+    vo => vo.value,
+    email => Email(email)
+  )
 }

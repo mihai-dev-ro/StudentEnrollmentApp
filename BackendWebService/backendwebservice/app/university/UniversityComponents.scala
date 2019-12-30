@@ -1,14 +1,15 @@
 package university
 
-import common.config.WithExecutionContext
+import com.softwaremill.macwire._
+import authentication.AuthenticationComponents
 import play.api.routing.Router
 import play.api.routing.sird._
 import university.controllers.UniversityController
 
 trait UniversityComponents
-  extends WithExecutionContext {
+  extends AuthenticationComponents {
 
-  val universityController: UniversityController = new UniversityController()
+  val universityController: UniversityController = wire[UniversityController]
 
   val universityRoutes: Router.Routes = {
     case GET(p"/universities") =>

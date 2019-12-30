@@ -6,13 +6,15 @@ import common.controllers.AbstractBaseController
 import common.services.DbActionRunner
 import play.api.libs.json._
 import play.api.mvc._
+import student.controllers.authentication_middleware.AuthenticatedActionBuilder
 import student.models._
-import student.services.{StudentRegistrationService, StudentUpdateService}
+import student.services.{StudentQueryService, StudentRegistrationService, StudentUpdateService}
 
-class UserController(authenticatedAction: AuthenticatedActionBuilder,
+class StudentController (authenticatedAction: AuthenticatedActionBuilder,
                      actionRunner: DbActionRunner,
                      studentRegistrationService: StudentRegistrationService,
-                     studentService: StudentUpdateService,
+                     studentUpdateService: StudentUpdateService,
+                     studentQueryService: StudentQueryService,
                      jwtAuthenticator: TokenGenerator[SecurityUserId, JwtToken],
                      components: ControllerComponents)
   extends AbstractBaseController(components) {
@@ -35,7 +37,7 @@ class UserController(authenticatedAction: AuthenticatedActionBuilder,
     validateJson[StudentForUpdatingWrapper]) { request =>
 
     val studentId = request.user.studentId
-    actionRunner.runTransactionally(studentService.update(studentId, request.body.student))
+    actionRunner.runTransactionally(studentUpdateService.update(studentId, request.body.student))
       .map(studentDetails => StudentDetailsWithToken(studentDetails, request.user.token))
       .map(StudentDetailsWithTokenWrapper(_))
       .map(Json.toJson(_))
@@ -45,7 +47,7 @@ class UserController(authenticatedAction: AuthenticatedActionBuilder,
 
   def getCurrentUser: Action[AnyContent] = authenticatedAction.async { request =>
     val studentId = request.user.studentId
-    actionRunner.runTransactionally(studentService.getStudentDetails(studentId))
+    actionRunner.runTransactionally(studentQueryService.getStudent(studentId))
       .map(studentDetails => StudentDetailsWithToken(studentDetails, request.user.token))
       .map(StudentDetailsWithTokenWrapper(_))
       .map(Json.toJson(_))
@@ -53,7 +55,6 @@ class UserController(authenticatedAction: AuthenticatedActionBuilder,
   }
 
   private def generateToken(securityUserId: SecurityUserId) = {
-    //val profile = IdProfile(securityUserId)
     jwtAuthenticator.generate(securityUserId)
   }
 

@@ -12,7 +12,7 @@ import slick.dbio.DBIO
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-private[users] class StudentRegistrationService(studentRegistrationValidator: StudentRegistrationValidator,
+private[student] class StudentRegistrationService(studentRegistrationValidator: StudentRegistrationValidator,
                                              securityUserCreator: SecurityUserCreator,
                                              dateTimeProvider: DateTimeProvider,
                                              studentRepo: StudentRepo,

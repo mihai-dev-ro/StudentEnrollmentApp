@@ -3,11 +3,15 @@
 
 title Student Enrollment System
 
-Container(mobile_app, "NextLevelStudy", "Java, Android", "Android-based Mobile App accessible by end-users")
+Person(future_student, "Future Student")
+
+
+Container(mobile_app, "StudentEnrollmentApp", "Java, Android", "Android-based Mobile App accessible by end-users")
 Container(backend_service, "Backend Web Service", "Scala, Play, Slick", "Web Service that exposes API for university listing, submission status, etc")
-ContainerDb(database, "Database", "PostgreSQL", "Persist the user's session")
+ContainerDb(database, "Database", "MySQL", "Persist user's data")
 Container(email_service, "Emailing Service", "Mailgun", "3rd party email service that is used for notification needs")
 
+Rel(future_student, mobile_app, "registers & applies to universities")
 Rel(mobile_app, backend_service, "send requests", "HTTPS")
 Rel(backend_service, database, "Update state", "JDBC")
 Rel_Right(backend_service, email_service, "Send email notification using", "SMTP")

@@ -4,12 +4,12 @@
 title Students Enrollment System
 
 LAYOUT_LEFT_RIGHT
-LAYOUT_AS_SKETCH()
+'LAYOUT_AS_SKETCH()
 
 Person_Ext(student, "Future Student", "Person that is interested in pursuing an university degree")
 
 System_Boundary(student_enrollment_app, "Student Enrollment"){
-    System(mobile_app, "University Enrollment App", "The application available on Mobile Devices that allows a user to navigate among various universities and enroll into the selected ones")
+    System(mobile_app, "Student Enrollment Mobile App", "The application available on Mobile Devices that allows a user to navigate among various universities and enroll into the selected ones")
     System(backend_service, "Backend API", "Internet accessible Web Service exposing endpoints to manage the state of the submitted applications for each user")
     SystemDb(database, "Database", "Persist the state of submitted applications")    
 }

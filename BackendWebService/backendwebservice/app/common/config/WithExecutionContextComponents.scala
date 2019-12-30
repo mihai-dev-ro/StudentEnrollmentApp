@@ -2,6 +2,6 @@ package common.config
 
 import scala.concurrent.ExecutionContext
 
-trait WithExecutionContext {
+trait WithExecutionContextComponents {
   implicit def executionContext: ExecutionContext
 }

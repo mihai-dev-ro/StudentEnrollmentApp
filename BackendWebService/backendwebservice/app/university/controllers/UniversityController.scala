@@ -11,7 +11,7 @@ case class PostFormInput(title: String, body: String)
 /**
  * Takes HTTP requests and produces JSON.
  */
-class UniversityController @Inject()(cc: ControllerComponents)(
+class UniversityController (cc: ControllerComponents)(
   implicit ec: ExecutionContext)
   extends AbstractController(cc) {
 
