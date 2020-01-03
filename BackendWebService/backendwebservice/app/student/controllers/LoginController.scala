@@ -18,9 +18,9 @@ class LoginController (
   )
   extends AbstractBaseController(controllerComponents) {
 
-  def login: Action[CredentialsWrapper] = Action.async[CredentialsWrapper](validateJson) {
+  def login: Action[CredentialsWrapper] = Action.async(validateJson[CredentialsWrapper]) {
     request =>
-      val email = request.body.email
+      val email = request.body.user.email
       val loginAction = authenticator.authenticate(request)
         .zip(studentQueryService.getStudent(email))
         .map(tokenAndStudent => StudentDetailsWithToken(tokenAndStudent._2, tokenAndStudent._1))

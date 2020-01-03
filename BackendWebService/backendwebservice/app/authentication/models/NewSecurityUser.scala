@@ -16,6 +16,7 @@ object PlainTextPassword {
     override def reads(json: JsValue): JsResult[PlainTextPassword] =
       Reads.StringReads.reads(json).map(PlainTextPassword(_))
 
-    override def writes(o: PlainTextPassword): JsValue = Writes.StringWrites.writes(o.value)
+    override def writes(o: PlainTextPassword): JsValue =
+      Writes.StringWrites.writes(o.value)
   }
 }

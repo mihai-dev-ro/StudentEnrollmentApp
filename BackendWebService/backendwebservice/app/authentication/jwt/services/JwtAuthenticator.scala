@@ -19,7 +19,7 @@ class JwtAuthenticator(secretProvider: SecretProvider, dateTimeProvider: DateTim
   }
 
   def parse(authorizationHeader: String): String = {
-    authorizationHeader.stripPrefix("Token ")
+    authorizationHeader.stripPrefix("Token ").stripPrefix("Bearer ")
   }
 
   def validate(jwtToken: JwtToken):
@@ -49,7 +49,7 @@ class JwtAuthenticator(secretProvider: SecretProvider, dateTimeProvider: DateTim
   }
 
   def getSecurityUserId(jwt: Jws[Claims]): SecurityUserId = {
-    val securityUserId = java.lang.Long.parseLong(
+    val securityUserId = java.lang.Integer.parseInt(
       jwt.getBody.get(JwtTokenGenerator.securityUserIdClaimName, classOf[String]))
     SecurityUserId(securityUserId)
   }

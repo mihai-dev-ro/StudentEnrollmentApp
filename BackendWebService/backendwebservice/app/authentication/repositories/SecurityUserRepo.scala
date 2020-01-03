@@ -9,7 +9,7 @@ import common.repositories.mappings.JavaTimeDbMappings
 import common.repositories.{BaseRepo, DbConfigHelper, IdTable}
 import common.utils.DBIOUtils
 import slick.dbio.DBIO
-import slick.jdbc.PostgresProfile.api.{DBIO => _, MappedTo => _, Rep => _,TableQuery => _, _}
+import slick.jdbc.H2Profile.api.{DBIO => _, MappedTo => _, Rep => _,TableQuery => _, _}
 import slick.lifted.{ProvenShape, _}
 
 import scala.concurrent.ExecutionContext
@@ -45,7 +45,7 @@ class SecurityUserRepo(implicit val executionContext: ExecutionContext)
 }
 
 protected class SecurityUserTable(tag: Tag)
-  extends IdTable[SecurityUserId, SecurityUser](tag, "security_users")
+  extends IdTable[SecurityUserId, SecurityUser](tag, "Security_users")
   with JavaTimeDbMappings {
 
   def email: Rep[Email] = column[Email]("Email")
@@ -63,6 +63,6 @@ protected class SecurityUserTable(tag: Tag)
 private[authentication] object SecurityUserMetaModel extends IdMetaModel {
   override type ModelId = SecurityUserId
 
-  val email: Property[Email] = Property("email")
-  val password: Property[PasswordHash] = Property("password")
+  val email: Property[Email] = Property("Email")
+  val password: Property[PasswordHash] = Property("Password")
 }

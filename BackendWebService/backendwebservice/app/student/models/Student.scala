@@ -5,19 +5,19 @@ import java.time.Instant
 import authentication.models.SecurityUserId
 import common.models.{BaseId, Email, IdMetaModel, Property, WithId}
 import play.api.libs.json._
-import slick.jdbc.PostgresProfile.api._
+import slick.jdbc.H2Profile.api._
 
-case class StudentId(override val value: Int) extends AnyVal with BaseId[Int]
+case class StudentId(override val value: Long) extends AnyVal with BaseId[Long]
 object StudentId {
   implicit val StudentIdFormat: Format[StudentId] = new Format[StudentId] {
-    override def writes(o: StudentId): JsValue = Writes.IntWrites.writes(o.value)
+    override def writes(o: StudentId): JsValue = Writes.LongWrites.writes(o.value)
 
     override def reads(json: JsValue): JsResult[StudentId] =
       Reads.IntReads.reads(json).map(StudentId(_))
   }
 
   implicit val studentIdDbMapping: BaseColumnType[StudentId] =
-    MappedColumnType.base[StudentId, Int] (vo => vo.value, id => StudentId(id))
+    MappedColumnType.base[StudentId, Long] (vo => vo.value, id => StudentId(id))
 
 }
 
@@ -27,7 +27,7 @@ case class Student(id: StudentId,
                    name: Option[String],
                    education: Option[String],
                    createdAt: Instant,
-                   updatedAt: Instant) extends WithId[Int, StudentId]
+                   updatedAt: Instant) extends WithId[Long, StudentId]
 
 object StudentMetaModel extends IdMetaModel {
   override type ModelId = StudentId

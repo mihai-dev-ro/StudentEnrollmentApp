@@ -8,13 +8,9 @@ import common.config.WithExecutionContextComponents
 import play.api.Configuration
 import play.api.mvc.PlayBodyParsers
 
-trait JwtAuthComponents extends WithExecutionContextComponents with CommonComponents  {
+trait JwtAuthComponents extends CommonComponents  {
 
   def configuration: Configuration
-
-  def playBodyParsers: PlayBodyParsers
-
-  def securityUserProvider: SecurityUserProvider
 
   lazy val secretProvider: SecretProvider = wire[SecretProvider]
   lazy val jwtTokenGenerator: JwtTokenGenerator = wire[JwtTokenGenerator]

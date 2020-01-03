@@ -2,6 +2,7 @@ package student
 
 import com.softwaremill.macwire._
 import authentication.AuthenticationComponents
+import play.api.mvc.PlayBodyParsers
 import play.api.routing.Router
 import play.api.routing.sird._
 import student.controllers.authentication_middleware.AuthenticatedActionBuilder
@@ -12,6 +13,8 @@ import student.services._
 
 trait StudentComponents
   extends AuthenticationComponents {
+
+  def playBodyParsers: PlayBodyParsers
 
   //repo
   lazy val studentRepo: StudentRepo = wire[StudentRepo]

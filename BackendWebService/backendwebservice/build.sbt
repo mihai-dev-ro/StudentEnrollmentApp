@@ -16,6 +16,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.7.4",
   "com.typesafe.play" %% "play-slick" % "4.0.2",
   "com.typesafe.play" %% "play-slick-evolutions" % "4.0.2",
+  "com.h2database" % "h2" % "1.4.192",
   "org.julienrf" %% "play-json-derived-codecs" % "6.0.0",
   "org.mindrot" % "jbcrypt" % "0.4",
   "commons-validator" % "commons-validator" % "1.6",

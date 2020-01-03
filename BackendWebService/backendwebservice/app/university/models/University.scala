@@ -2,11 +2,10 @@ package university.models
 
 import common.models.{BaseId, IdMetaModel, Property, WithId}
 import play.api.libs.json._
-import slick.jdbc.PostgresProfile.api._
+import slick.jdbc.H2Profile.api._
 
-case class UniversityId(override val value: Int)
-  extends AnyVal
-    with BaseId[Int]
+case class UniversityId(override val value: Long)
+  extends AnyVal with BaseId[Long]
 
 object UniversityId {
   implicit val universityIdFormat: Format[UniversityId] =
@@ -16,11 +15,11 @@ object UniversityId {
       Reads.IntReads.reads(json).map(UniversityId(_))
 
     override def writes(o: UniversityId): JsNumber =
-      Writes.IntWrites.writes(o.value)
+      Writes.LongWrites.writes(o.value)
   }
 
   implicit val universityIdDbMapping: BaseColumnType[UniversityId] =
-    MappedColumnType.base[UniversityId, Int] (
+    MappedColumnType.base[UniversityId, Long] (
 
     vo => vo.value,
     id => UniversityId(id)
@@ -28,21 +27,19 @@ object UniversityId {
 }
 
 case class University(id: UniversityId,
-                      name: String,
-                      codeCountry: String,
-                      country: String,
-                      stateProvince: String
-                     ) extends WithId[Int, UniversityId]
+  name: String,
+  countyCode: String,
+  countryName: String
+) extends WithId[Int, UniversityId]
 
 object University {
   implicit val universityFormat: Format[University] = Json.format[University]
 }
 
 object UniversityMetaModel extends IdMetaModel {
-  val name: Property[String] = Property("name")
-  val codeCountry: Property[String] = Property("codeCountry")
-  val country: Property[String] = Property("country")
-  val stateProvince: Property[String] = Property("stateProvince")
+  val name: Property[String] = Property("Name")
+  val countryCode: Property[String] = Property("Country_code")
+  val countryName: Property[String] = Property("Country")
 
   override type ModelId = UniversityId
 }

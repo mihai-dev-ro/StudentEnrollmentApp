@@ -70,9 +70,9 @@ class StudentTable(tag: Tag) extends IdTable[StudentId, Student](tag, "Students"
 
   def education: Rep[String] = column[String]("Education")
 
-  def createdAt: Rep[Instant] = column("created_at")
+  def createdAt: Rep[Instant] = column("Created_at")
 
-  def updatedAt: Rep[Instant] = column("updated_at")
+  def updatedAt: Rep[Instant] = column("Updated_at")
 
   def * : ProvenShape[Student] =
     (id, securityUserId, email, name.?, education.?, createdAt, updatedAt) <>

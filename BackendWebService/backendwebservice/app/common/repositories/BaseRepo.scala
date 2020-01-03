@@ -4,7 +4,7 @@ import common.exceptions.MissingModelException
 import common.models._
 import common.utils.DBIOUtils
 import slick.dbio.DBIO
-import slick.jdbc.PostgresProfile.api.{DBIO => _, MappedTo => _, Rep => _, TableQuery => _, _}
+import slick.jdbc.H2Profile.api.{DBIO => _, MappedTo => _, Rep => _, TableQuery => _, _}
 import slick.lifted._
 
 import scala.concurrent.ExecutionContext.Implicits._
@@ -126,7 +126,7 @@ trait BaseRepo[ModelId <: BaseId[Long],
 }
 
 
-abstract class IdTable[Id <: BaseId[Int], Entity <: WithId[Int, Id]]
+abstract class IdTable[Id <: BaseId[Long], Entity <: WithId[Long, Id]]
   (tag: Tag, schemaName: Option[String], tableName: String)(
     implicit val mapping: BaseColumnType[Id])
   extends Table[Entity](tag, schemaName, tableName) {

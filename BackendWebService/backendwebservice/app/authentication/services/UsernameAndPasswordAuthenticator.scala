@@ -18,7 +18,7 @@ private[authentication] class UsernameAndPasswordAuthenticator(
   override def authenticate(request: Request[CredentialsWrapper]): DBIO[String] = {
     require(request != null)
 
-    val CredentialsWrapper(email, password) = request.body
+    val EmailAndPasswordCredentials(email, password) = request.body.user
 
     securityUserProvider.findByEmail(email)
       .map(securityUser => {
