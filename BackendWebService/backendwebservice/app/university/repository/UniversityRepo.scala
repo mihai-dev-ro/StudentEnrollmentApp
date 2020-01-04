@@ -1,5 +1,6 @@
 package university.repository
 
+import scala.collection.immutable._
 import common.models.{IdMetaModel, Property}
 import common.repositories.{BaseRepo, IdTable}
 import slick.dbio.DBIO
@@ -44,13 +45,15 @@ class UniversityRepo(dnsDomainRepo: UniversityDNSDomainRepo,
   }
 
   def createUniversityWithCompleteInfo(universities: Seq[University],
-    universityIdWithDNSDomains: Map[UniversityId, Seq[UniversityDNSDomain]],
-    universityIdWithWebsites: Map[UniversityId, Seq[UniversityWebsite]]
-  ): Unit = {
+    universityIdWithDNSDomains: Map[UniversityId, Seq[UniversityIdWithDNSDomain]],
+    universityIdWithWebsites: Map[UniversityId, Seq[UniversityIdWithWebsite]]
+  ) = {
 
-    def createHelper(university: University): Unit = {
+    def createHelper(university: University) = {
       val dnsDomains = universityIdWithDNSDomains.getOrElse(university.id, Seq.empty)
+        .map(_.dnsDomain)
       val websites = universityIdWithWebsites.getOrElse(university.id, Seq.empty)
+          .map(_.website)
 
       UniversityWithCompleteInfo(university, dnsDomains, websites)
     }

@@ -1,8 +1,14 @@
 package university.controllers
 
+import common.controllers.AbstractBaseController
+import common.services.DbActionRunner
 import javax.inject.Inject
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import play.api.{Configuration, Logger}
+import student.controllers.authentication_middleware.AuthenticatedActionBuilder
+import university.models.UniversityWithCompleteInfo
+import university.services.{UniversityQueryExternalProvider, UniversityQueryProvider}
 
 import scala.concurrent.ExecutionContext
 
@@ -11,14 +17,34 @@ case class PostFormInput(title: String, body: String)
 /**
  * Takes HTTP requests and produces JSON.
  */
-class UniversityController (cc: ControllerComponents)(
+class UniversityController (cc: ControllerComponents,
+  universityQueryProvider: UniversityQueryProvider,
+  universityQueryExternalProvider: UniversityQueryExternalProvider,
+  authenticatedAction: AuthenticatedActionBuilder,
+  actionRunner: DbActionRunner)(
   implicit ec: ExecutionContext)
-  extends AbstractController(cc) {
+  extends AbstractBaseController(cc) {
 
   private val logger = Logger(getClass)
 
-  def getAll = Action {
-    Ok("All")
+  def getAll = authenticatedAction.async {request =>
+    actionRunner.run(universityQueryProvider.getAllUniversitiesWithCompleteInfo)
+      .map(Json.toJson(_))
+      .map(Ok(_))
+  }
+
+  def getAllFromPublicAPI = authenticatedAction.async {request =>
+    universityQueryExternalProvider.getAllUniversitiesWithCompleteInfo()
+      .map({
+        case Left(value) => {
+          val violation = JsObject(Map("timeout exception" -> Json.toJson(value.toString())))
+          val response = JsObject(Map("errors" -> violation))
+          UnprocessableEntity(response)
+        }
+        case Right(value) => {
+          Ok(Json.toJson(value))
+        }
+      })
   }
 
 //  private val form: Form[PostFormInput] = {

@@ -5,12 +5,15 @@ import play.api.db.DBApi
 import play.api.db.evolutions.EvolutionsComponents
 import play.api.db.slick.evolutions.SlickEvolutionsComponents
 import play.api.db.slick.{DatabaseConfigProvider, DbName, DefaultSlickApi, SlickApi, SlickComponents}
+import play.api.libs.ws.WSClient
+import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.mvc.{EssentialFilter, Handler, RequestHeader}
 import play.api.routing.Router
 import play.api.{Application, ApplicationLoader, BuiltInComponentsFromContext, LoggerConfigurator}
 import play.filters.cors.{CORSConfig, CORSFilter}
 import slick.basic.{BasicProfile, DatabaseConfig}
 import student.StudentComponents
+import university.UniversityComponents
 
 class StudentEnrollmentAppLoader extends ApplicationLoader {
   override def load(context: ApplicationLoader.Context): Application =
@@ -23,7 +26,9 @@ class StudentEnrollmentAppComponents(context: ApplicationLoader.Context)
   with SlickEvolutionsComponents
   with EvolutionsComponents
   with AuthenticationComponents
-  with StudentComponents {
+  with StudentComponents
+  with UniversityComponents
+  with AhcWSComponents {
 
   // override and associate instances to definitions defined in components registry traits
   // 1. CommonComponents via Authentication or any other
@@ -56,8 +61,8 @@ class StudentEnrollmentAppComponents(context: ApplicationLoader.Context)
   override def httpFilters: Seq[EssentialFilter] = List(corsFilter)
 
   // router
-  lazy val routes: PartialFunction[RequestHeader, Handler] = studentRoutes
+  lazy val routes: PartialFunction[RequestHeader, Handler] =
+    studentRoutes
+      .orElse(universityRoutes)
   override def router: Router = Router.from(routes)
-
-
 }

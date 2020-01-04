@@ -30,7 +30,7 @@ case class University(id: UniversityId,
   name: String,
   countyCode: String,
   countryName: String
-) extends WithId[Int, UniversityId]
+) extends WithId[Long, UniversityId]
 
 object University {
   implicit val universityFormat: Format[University] = Json.format[University]
