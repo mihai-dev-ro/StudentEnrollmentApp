@@ -2,7 +2,6 @@ package university.services
 
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
-import play.api.mvc.ControllerComponents
 import university.models.{UniversityId, UniversityWithCompleteInfo}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -58,6 +57,7 @@ class UniversityQueryExternalProvider(wsClient: WSClient)(
         case e: scala.concurrent.TimeoutException =>
           Left(new RuntimeException(e.toString()))
       })
+
   }
 
 

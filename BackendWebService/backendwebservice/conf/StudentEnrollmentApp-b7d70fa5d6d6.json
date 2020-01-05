@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "studentenrollmentapp-264214",
+  "private_key_id": "b7d70fa5d6d6f7aee53cedab30e90590ca10f569",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDU+4cz2vsMlEad\nVxYlewjd/34F2TXszcUC7SRtBP7yn8tP+iEqB5SWjKwzBuwU/ZQLhY5CZmQW+Mq9\n/8Rdq0QR6BiO+PHD1NQEeOGxe2XavfrRVoiRjt5S7klHe7ogT7XsYyiv3ii1aUsV\nx8JDglhKUA0I3n5nQJqL6MEjB9Iso+bDGYFuxc3k7yECEFK2QYK4rNeqlXeZjSQ5\nTuPQr+gjGypTU6vgDa98Sg6r7FqszLyreJXw0fo5kB0gu8yQ06Li4i/3aGeXYR2Y\n8gVJKzfAq4QuL/nkwx0Awgztl4Fr6/uUqx5KQxroGrD8gAJHcvnLa84b2KPQbQZF\ndc9FeZdtAgMBAAECggEAMLoOG+tG4gEfabplnvQX2oBsQubHu1J1dx6tpYKN2JD9\n+SF7CmxbDpmHARKdmwzL3Nn0qtTVo9rOOatlL9/xzh35VmZ2m4za594HFq2qZyHt\nWwzu6ExVKYiKO+A+/Er4Tml+QsQzMJPzIXvHAl51GCVZ4hRTO4iwgv9ghoTwzRTU\nceyhMsIHXFUR+CIkoZjbz4+59zM9hqWWUluPuOAc6DWU/IxsaABZaYtpGfR9AdBw\nNG8B5wn7ShDeTeHLodX2DE174hb5Q+cvpychVVKECPb/8r8CCPW7t0RqOVLIXFe9\nNkPjrOBQ5hPVinIKcJgJQYnFywBMnalNxZZFFyFPAQKBgQD5MgBCrDGH5cvLqJQN\nkO2Yar2Y54DoAhzqDejJjmlWyAskJ1yrDfl7GHr/Z4pmriDx4tdIxwAurjZ0mpPv\nWTZJaoqomaN6IimTdJXOASLY3CHceHa4YAIxdfJuqIMn29MZHyzVAOlu+XM6CPW/\nulJJ5ByqRnk2D9D1lVUQApK7AQKBgQDazGG7690uQx5TXHreq005UakHXg41ucNn\nFlpmwlCTpYnihyp+hfoKYbQHg36MTgoaZHRf42NL6JIETMTf1xCp3JttkzieIpxN\nyOHyUjlbl/LK7LKdG23s+w5bIsyrxV/Ny5uCUjup/NankYOLG7hDHd9Hm18ekJqS\nhwWm+tf4bQKBgFqJuyR+MYTBjfjRp/EB3gFJjtc2DVS+J8k2AoTwk/8usTWSg422\nhxUdQNr4wIUr8NZRZ4yOmNdc/nYBD4yfqiSka/pzz7x5GwfzDNaK/SEzYa4bqm60\nmzdjNhDUcsqRiLIQ7JX7PdTPFvlX9gmR5YHpOiz3a+SjfHUtq3kkpjEBAoGBAJ9L\nofRRWqztzMxgTkyDZyvOGkP05F+VKYCKM7MQ0d1M7kBwrC2FmW+phorZ326C+rQQ\nYvHU+VwwrO5YfhWB3O3uYXK7dsMa67VuBaKI3p2i2O+IuNnNOJEKj38mrOB6SK/q\nBwQwnqO6IwXI2X6T5elnfEIECpKUMRVxHFpf0pFZAoGAGF3l6N4mvxslw0HPUV5P\n+SrvXfEOBUvS5eo3q7LEwSdK879ej9MMelec4wBudsWLU8N6fWmtv3It8In6v895\nu0MDm2WUeTbw7GH8X2e2ZNmNaPT9a3C0OR5ry8U37Rax8mBJHKRDGgnOVVm4bZxx\nrIUWIic0prcchT8eXUfu+kU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "admin-406@studentenrollmentapp-264214.iam.gserviceaccount.com",
+  "client_id": "109290480505862782353",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/admin-406%40studentenrollmentapp-264214.iam.gserviceaccount.com"
+}

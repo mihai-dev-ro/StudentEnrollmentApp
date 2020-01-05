@@ -21,6 +21,8 @@ libraryDependencies ++= Seq(
   "org.mindrot" % "jbcrypt" % "0.4",
   "commons-validator" % "commons-validator" % "1.6",
   "org.apache.commons" % "commons-lang3" % "3.9",
+  "com.zengularity" %% "benji-play" % "2.1.1-play27",
+  "com.zengularity" %% "benji-google" % "2.1.1",
 
   "org.scalaz" %% "scalaz-core" % "7.2.29",
   "com.softwaremill.macwire" %% "macros" % "2.3.3" % "provided",

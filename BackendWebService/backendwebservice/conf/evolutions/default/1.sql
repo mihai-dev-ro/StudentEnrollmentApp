@@ -47,12 +47,18 @@ CREATE TABLE University_websites(
     FOREIGN KEY (University_id) REFERENCES Universities(Id)
 );
 
-CREATE TABLE Student_submissions(
+CREATE TABLE Student_applications(
     Id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Version INT(11) NOT NULL,
     Student_id INT(11) NOT NULL,
     University_id INT(11) NOT NULL,
-    Essay_reason VARCHAR(MAX),
-    Application_object_file_url VARCHAR(MAX),
+    Status INT(11) NOT NULL,
+    Academic_records VARCHAR(MAX),
+    Honors_and_distinctions VARCHAR(MAX),
+    Volunteer_activities VARCHAR(MAX),
+    Other_interests VARCHAR(MAX),
+    Cover_letter VARCHAR(MAX),
+    Attached_file_url VARCHAR(MAX),
     Created_at TIMESTAMP WITH TIMEZONE NOT NULL,
     Updated_at TIMESTAMP WITH TIMEZONE NOT NULL,
     FOREIGN KEY (Student_id) REFERENCES Students(Id),

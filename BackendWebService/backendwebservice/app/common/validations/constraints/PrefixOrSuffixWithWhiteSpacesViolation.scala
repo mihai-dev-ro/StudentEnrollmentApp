@@ -1,5 +1,5 @@
 package common.validations.constraints
 
 case object PrefixOrSuffixWithWhiteSpacesViolation extends Violation {
-  override def message: String = "remove redundant whitespace characters"
+  override def message: String = "sterge spatiile libere repetitive"
 }

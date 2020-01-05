@@ -33,8 +33,8 @@ object StudentMetaModel extends IdMetaModel {
   override type ModelId = StudentId
 
   val email: Property[String] = Property("Email")
-  val name: Property[String] = Property("Name")
-  val education: Property[String] = Property("Education")
+  val name: Property[Option[String]] = Property("Name")
+  val education: Property[Option[String]] = Property("Education")
 }
 
 

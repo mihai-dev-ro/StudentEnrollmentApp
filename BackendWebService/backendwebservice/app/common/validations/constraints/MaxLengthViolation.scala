@@ -1,5 +1,5 @@
 package common.validations.constraints
 
 case class MaxLengthViolation(maxLength: Int) extends Violation {
-  override val message: String = s"is too long (maximum is $maxLength characters)"
+  override val message: String = s"este prea mare (maximum este $maxLength literes)"
 }
