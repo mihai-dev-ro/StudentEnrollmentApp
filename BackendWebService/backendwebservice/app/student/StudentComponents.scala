@@ -14,13 +14,20 @@ import play.api.routing.sird._
 import student.controllers.authentication_middleware.AuthenticatedActionBuilder
 import student.controllers.authentication_middleware.jwt.JwtAuthenticatedActionBuilder
 import student.controllers._
+import student.models.StudentApplicationId
 import student.repositories._
 import student.services._
+import university.repository.UniversityRepo
+import university.services.{UniversityQueryExternalProvider, UniversityQueryProvider, UniversityUpdateService}
 
 trait StudentComponents
   extends AuthenticationComponents {
 
   def playBodyParsers: PlayBodyParsers
+
+  def universityQueryProvider: UniversityQueryProvider
+  def universityQueryExternalProvider: UniversityQueryExternalProvider
+  def universityUpdateService: UniversityUpdateService
 
   //repo
   lazy val studentRepo: StudentRepo = wire[StudentRepo]
@@ -63,9 +70,22 @@ trait StudentComponents
     case PUT(p"/user") => studentController.update
 
     case POST(p"/user/file") => studentApplicationController.uploadFile
+
     case GET(p"/user/file" ? q_o"name=$fileName") =>
       studentApplicationController.getFile(fileName)
+
     case GET(p"/user/file/metadata" ? q_o"name=$fileName") =>
       studentApplicationController.getFileMetadata(fileName)
+
+    case POST(p"/user/applications") => studentApplicationController.startApplication
+
+    case GET(p"/user/applications") => studentApplicationController.showAllApplications
+
+    case GET(p"/user/application/$id") =>
+      studentApplicationController.showApplication(StudentApplicationId(id.toInt))
+
+    case POST(p"/user/application/$id/file") =>
+      studentApplicationController.uploadFileForApplication(
+        StudentApplicationId(id.toInt))
   }
 }

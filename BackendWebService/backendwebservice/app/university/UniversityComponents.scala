@@ -9,7 +9,7 @@ import play.api.routing.sird._
 import student.controllers.authentication_middleware.AuthenticatedActionBuilder
 import university.controllers.UniversityController
 import university.repository.{UniversityDNSDomainRepo, UniversityRepo, UniversityWebsiteRepo}
-import university.services.{UniversityQueryExternalProvider, UniversityQueryProvider}
+import university.services.{UniversityQueryExternalProvider, UniversityQueryProvider, UniversityUpdateService}
 
 trait UniversityComponents
   extends AuthenticationComponents {
@@ -21,6 +21,8 @@ trait UniversityComponents
   lazy val universityDNSDomainRepo: UniversityDNSDomainRepo = wire[UniversityDNSDomainRepo]
   lazy val universityWebsiteRepo: UniversityWebsiteRepo = wire[UniversityWebsiteRepo]
   lazy val universityRepo: UniversityRepo = wire[UniversityRepo]
+
+  lazy val universityUpdateService: UniversityUpdateService = wire[UniversityUpdateService]
   lazy val universityQueryProvider: UniversityQueryProvider = wire[UniversityQueryProvider]
   lazy val universityQueryExternalProvider: UniversityQueryExternalProvider =
     wire[UniversityQueryExternalProvider]
@@ -29,6 +31,9 @@ trait UniversityComponents
   // routes
   val universityRoutes: Router.Routes = {
     case GET(p"/universities") =>
+      universityController.getAll
+
+    case GET(p"/universities_public_api") =>
       universityController.getAllFromPublicAPI
   }
 }

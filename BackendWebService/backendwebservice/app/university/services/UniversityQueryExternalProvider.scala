@@ -1,5 +1,6 @@
 package university.services
 
+import common.exceptions.MissingModelException
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import university.models.{UniversityId, UniversityWithCompleteInfo}
@@ -57,8 +58,29 @@ class UniversityQueryExternalProvider(wsClient: WSClient)(
         case e: scala.concurrent.TimeoutException =>
           Left(new RuntimeException(e.toString()))
       })
-
   }
 
+  def getUniversityWithCompleteInfo(universityId: UniversityId) = {
+    getAllUniversitiesWithCompleteInfo()
+      .map(_.filterOrElse(_.map(_.id == universityId).size > 0,
+        new MissingModelException("universitatea nu a fost gasita")))
+      .map(_.map(_.filter(_.id == universityId).head))
+      .flatMap(_ match {
+        case Left(e) => Future.failed(e)
+        case Right(university) => Future.successful(university)
+      })
+  }
 
+  def getUniversityWithCompleteInfo(name: String, countryCode: String) = {
+    getAllUniversitiesWithCompleteInfo()
+      .map(_.filterOrElse(_.filter(
+        u => u.name.equalsIgnoreCase(name) && u.countyCode.equalsIgnoreCase(countryCode)).size > 0,
+        new MissingModelException("universitatea nu a fost gasita")))
+      .map(_.map(_.filter(
+        u => u.name.equalsIgnoreCase(name) && u.countyCode.equalsIgnoreCase(countryCode)).head))
+      .flatMap(_ match {
+        case Left(e) => Future.failed(e)
+        case Right(university) => Future.successful(university)
+      })
+  }
 }

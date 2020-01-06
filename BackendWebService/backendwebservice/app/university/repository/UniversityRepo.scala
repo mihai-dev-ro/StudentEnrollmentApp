@@ -1,7 +1,7 @@
 package university.repository
 
 import scala.collection.immutable._
-import common.models.{IdMetaModel, Property}
+import common.models.{IdMetaModel, Ordering, Property}
 import common.repositories.{BaseRepo, IdTable}
 import slick.dbio.DBIO
 import slick.lifted._
@@ -32,6 +32,52 @@ class UniversityRepo(dnsDomainRepo: UniversityDNSDomainRepo,
       dnsDomainsForUniversity <- dnsDomainRepo.getByUniversityId(id)
       websitesForUniversity <- websiteRepo.getByUniversityId(id)
     } yield UniversityWithCompleteInfo(university, dnsDomainsForUniversity, websitesForUniversity)
+  }
+
+  def getByIdWithCompleteInfoOption(id: UniversityId): DBIO[Option[UniversityWithCompleteInfo]] = {
+    require(id != null)
+
+    val unknownUniversity = University(UniversityId(-1), "", "", "")
+
+    val results = for {
+      university <- findByIdOption(id)
+      universityId = university.getOrElse(unknownUniversity).id
+      dnsDomainsForUniversity <- dnsDomainRepo.getByUniversityId(universityId)
+      websitesForUniversity <- websiteRepo.getByUniversityId(id)
+    } yield (university, dnsDomainsForUniversity, websitesForUniversity)
+
+    results.map(universityAndAll => universityAndAll._1 match {
+      case Some(university) => Some(UniversityWithCompleteInfo.apply(university, universityAndAll._2,
+        universityAndAll._3))
+      case None => None
+    })
+  }
+
+  def getByNameAndCountryCodeWithCompleteInfoOption(name: String, countryCode: String) = {
+    require(name != null && countryCode != null)
+
+    val unknownUniversity = University(UniversityId(-1), "", "", "")
+
+    val results = for {
+      university <- findByNameAndCountryCodeOption(name, countryCode)
+      universityId = university.getOrElse(unknownUniversity).id
+      dnsDomainsForUniversity <- dnsDomainRepo.getByUniversityId(universityId)
+      websitesForUniversity <- websiteRepo.getByUniversityId(universityId)
+    } yield (university, dnsDomainsForUniversity, websitesForUniversity)
+
+    results.map(universityAndAll => universityAndAll._1 match {
+      case Some(university) => Some(UniversityWithCompleteInfo.apply(university, universityAndAll._2,
+        universityAndAll._3))
+      case None => None
+    })
+  }
+
+  def findByNameAndCountryCodeOption(name: String, countryCode: String) = {
+    query
+      .filter(_.name === name)
+      .filter(_.countryCode === countryCode)
+      .result
+      .headOption
   }
 
   def getGroupDNSDomainsByUniversityIds() = {
@@ -75,7 +121,7 @@ class UniversityRepo(dnsDomainRepo: UniversityDNSDomainRepo,
 }
 
 class UniversityTable(tag: Tag)
-  extends IdTable[UniversityId, University](tag, "University") {
+  extends IdTable[UniversityId, University](tag, "Universities") {
 
   def name: Rep[String] = column[String]("Name")
   def countryCode: Rep[String] = column[String]("Country_code")

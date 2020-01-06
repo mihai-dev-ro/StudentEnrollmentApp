@@ -18,4 +18,18 @@ class UniversityQueryProvider(universityRepo: UniversityRepo)(
 
     universityRepo.getByIdWithCompleteInfo(id)
   }
+
+  def getUniversityWithCompleteInfoOption(id: UniversityId):
+    DBIO[Option[UniversityWithCompleteInfo]] = {
+    require(id != null)
+
+    universityRepo.getByIdWithCompleteInfoOption(id)
+  }
+
+  def getUniversityWithCompleteInfoOption(name: String, countryCode: String):
+  DBIO[Option[UniversityWithCompleteInfo]] = {
+    require(name != null && countryCode != null)
+
+    universityRepo.getByNameAndCountryCodeWithCompleteInfoOption(name, countryCode)
+  }
 }

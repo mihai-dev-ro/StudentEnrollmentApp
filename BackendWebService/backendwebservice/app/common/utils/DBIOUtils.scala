@@ -12,6 +12,13 @@ object DBIOUtils {
     }
   }
 
+  def eitherToDBIO[A](someVal: Either[Throwable, A]): DBIO[A] = {
+    someVal match {
+      case Right(v) => DBIO.successful(v)
+      case Left(e) => DBIO.failed(e)
+    }
+  }
+
   def fail(predicate: => Boolean, e: Exception): DBIO[Unit] = {
     if (predicate) DBIO.successful(())
     else DBIO.failed(e)

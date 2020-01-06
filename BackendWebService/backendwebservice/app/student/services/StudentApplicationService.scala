@@ -12,6 +12,8 @@ import university.models.UniversityId
 import student.services
 import slick.dbio.DBIO
 import student.validations.constraints.StudentApplicationAlreadySubmittedViolation
+import university.repository.UniversityRepo
+import university.services._
 
 import scala.concurrent.ExecutionContext
 
@@ -48,6 +50,12 @@ class StudentApplicationService(
     require(studentId != null)
 
     studentApplicationRepo.getAllByStudentId(studentId)
+  }
+
+  def loadApplication(studentApplicationId: StudentApplicationId) = {
+    require(studentApplicationId != null)
+
+    studentApplicationRepo.findById(studentApplicationId)
   }
 
   def updateApplication(studentApplicationId: StudentApplicationId,
