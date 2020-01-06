@@ -9,7 +9,7 @@ import common.services.{DbActionRunner, FileCloudUploaderService}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents, MultipartFormData}
 import student.controllers.authentication_middleware.AuthenticatedActionBuilder
-import student.models.{NewStudentApplication, StudentApplicationForUpdating, StudentApplicationId, StudentApplicationStartWrapper}
+import student.models.{NewStudentApplication, StudentApplicationFile, StudentApplicationForUpdating, StudentApplicationId, StudentApplicationStartWrapper}
 import student.services.StudentApplicationService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -72,12 +72,36 @@ class StudentApplicationController(
             file.filename)
         ))
         .flatMap(files => {
-          if (files. isEmpty)
+          if (files.isEmpty)
             Future.successful(BadRequest("Fisier lipsa"))
           else
             Future.sequence(files).map(_ => {
               Ok(s"Documentele ${request.body.files.map(_.filename).reduce(_ ++ "," ++ _)} " +
                 s"au fost salvate")
+            })
+        })
+  }
+
+  def uploadFileForApplication(studentApplicationId: StudentApplicationId) =
+    authenticatedAction.async(parse.multipartFormData) { request =>
+      val studentId = request.user.studentId
+
+      // implement
+      fileCloudUploaderService.getBucket(studentId)
+        .map(bucket => request.body.files.map(file =>
+          fileCloudUploaderService.createObject(bucket, FileIO.fromPath(file.ref.path),
+            file.filename)
+        ))
+        .flatMap(files => {
+          if (files.isEmpty)
+            Future.successful(BadRequest("Fisier lipsa"))
+          else
+            Future.sequence(files).flatMap(_ => {
+              request.body.files.headOption.map(file =>
+                dbActionRunner.runTransactionally(
+                  studentApplicationService.updateApplicationFile(studentApplicationId,
+                    StudentApplicationFile(Some(file.filename)))))
+                  .map(Ok(_))
             })
         })
   }

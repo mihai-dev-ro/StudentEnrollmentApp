@@ -112,7 +112,7 @@ class StudentApplicationService(
   }
 
   def updateApplicationFile(studentApplicationId: StudentApplicationId,
-    studentApplicationFile: StudentApplicationFile): Unit = {
+    studentApplicationFile: StudentApplicationFile) = {
 
     require(studentApplicationId != null && studentApplicationFile != null)
 
